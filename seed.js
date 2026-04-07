@@ -9,24 +9,28 @@ async function seed() {
   await mongoose.connect(process.env.MONGO_URI);
   console.log('Connected to MongoDB');
 
-  const existing = await User.findOne({ email: 'admin@salo.edu' });
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@salo.edu';
+  const existing = await User.findOne({ email: adminEmail });
   if (existing) {
     console.log('Admin already exists: admin@salo.edu / Admin@123');
     await mongoose.disconnect();
     return;
   }
 
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@salo.edu';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
+
   await User.create({
     name: 'System Administrator',
-    email: 'admin@salo.edu',
-    password: 'Admin@123',
+    email: adminEmail,
+    password: adminPassword,
     role: 'admin',
     department: 'Administration',
   });
 
   console.log('✅ Admin seeded successfully!');
-  console.log('   Email:    admin@salo.edu');
-  console.log('   Password: Admin@123');
+  console.log(`   Email:    ${adminEmail}`);
+  console.log(`   Password: ${adminPassword}`);
   await mongoose.disconnect();
 }
 

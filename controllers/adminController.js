@@ -7,8 +7,10 @@ const addStudent = async (req, res) => {
     const { name, regNumber, department } = req.body;
     if (!name || !regNumber) return res.status(400).json({ message: 'Name and Registration Number required' });
 
-    const email = `${regNumber.toLowerCase()}@student.salo.edu`;
-    const password = `Student@${regNumber}`;
+    const studentDomain = process.env.STUDENT_EMAIL_DOMAIN || 'student.salo.edu';
+    const passwordPrefix = process.env.DEFAULT_STUDENT_PASSWORD_PREFIX || 'Student@';
+    const email = `${regNumber.toLowerCase()}@${studentDomain}`;
+    const password = `${passwordPrefix}${regNumber}`;
 
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: 'Student already exists' });
@@ -30,9 +32,11 @@ const addFaculty = async (req, res) => {
     const { name, department } = req.body;
     if (!name) return res.status(400).json({ message: 'Name required' });
 
+    const facultyDomain = process.env.FACULTY_EMAIL_DOMAIN || 'faculty.salo.edu';
+    const passwordSuffix = process.env.DEFAULT_FACULTY_PASSWORD_SUFFIX || '123';
     const namePart = name.toLowerCase().replace(/\s+/g, '.');
-    const email = `${namePart}@faculty.salo.edu`;
-    const password = `Faculty@${name.split(' ')[0]}123`;
+    const email = `${namePart}@${facultyDomain}`;
+    const password = `Faculty@${name.split(' ')[0]}${passwordSuffix}`;
 
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: 'Faculty with this name already exists' });
