@@ -3,6 +3,7 @@ const CLO = require('../models/CLO');
 const Assessment = require('../models/Assessment');
 const Marks = require('../models/Marks');
 const User = require('../models/User');
+const Certificate = require('../models/Certificate');
 
 // @GET /api/faculty/courses
 const getMyCourses = async (req, res) => {
@@ -123,4 +124,14 @@ const getOutcomeAnalysis = async (req, res) => {
   }
 };
 
-module.exports = { getMyCourses, createCLO, getCLOs, createAssessment, getAssessments, uploadMarks, getOutcomeAnalysis };
+// @GET /api/faculty/certificates
+const getCertificates = async (req, res) => {
+  try {
+    const certificates = await Certificate.find({}).sort({ createdAt: -1 });
+    res.json(certificates);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getMyCourses, createCLO, getCLOs, createAssessment, getAssessments, uploadMarks, getOutcomeAnalysis, getCertificates };

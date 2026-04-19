@@ -2,6 +2,7 @@ const Course = require('../models/Course');
 const Marks = require('../models/Marks');
 const CLO = require('../models/CLO');
 const Assessment = require('../models/Assessment');
+const Certificate = require('../models/Certificate');
 const path = require('path');
 const fs = require('fs');
 
@@ -75,6 +76,17 @@ const getMyOutcomes = async (req, res) => {
 const uploadCertificate = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+
+    // Persist certificate metadata so faculty can view it
+    await Certificate.create({
+      studentId:        req.user._id,
+      studentName:      req.user.name,
+      studentEmail:     req.user.email,
+      course:           req.body.course || '',
+      certificateTitle: req.file.originalname,
+      fileUrl:          `/uploads/${req.file.filename}`,
+    });
+
     res.json({ message: 'Certificate uploaded successfully', filename: req.file.filename, path: `/uploads/${req.file.filename}` });
   } catch (error) {
     res.status(500).json({ message: error.message });

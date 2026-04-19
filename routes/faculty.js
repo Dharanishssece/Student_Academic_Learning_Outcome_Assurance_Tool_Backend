@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   getMyCourses, createCLO, getCLOs, createAssessment,
-  getAssessments, uploadMarks, getOutcomeAnalysis
+  getAssessments, uploadMarks, getOutcomeAnalysis, getCertificates
 } = require('../controllers/facultyController');
 const { protect } = require('../middleware/auth');
 const { role } = require('../middleware/role');
@@ -16,5 +16,6 @@ router.post('/create-assessment', createAssessment);
 router.get('/assessments/:courseId', getAssessments);
 router.post('/upload-marks', uploadMarks);
 router.get('/outcome-analysis/:courseId', getOutcomeAnalysis);
+router.get('/certificates', getCertificates);
 
 module.exports = router;

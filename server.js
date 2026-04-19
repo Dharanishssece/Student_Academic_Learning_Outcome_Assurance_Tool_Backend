@@ -9,22 +9,8 @@ connectDB();
 
 const app = express();
 
-// Parse CORS origins (comma-separated list)
-const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
-  .split(',')
-  .map(origin => origin.trim());
-
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (corsOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: ["http://localhost:5173", "http://localhost:5174"],
   credentials: true
 }));
 app.use(express.json());
